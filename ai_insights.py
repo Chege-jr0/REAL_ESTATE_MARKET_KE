@@ -10,9 +10,9 @@ def prepare_market_context(stats, city=None, prop_type=None):
 
     Overall Market:
     - Avearage Property Price: KES {stats['avg_price']: ,}
-    - Average Rental Yield: {stats['avg_rental_yield']}%
-    - Average Occupancy Rate: {stats['avg_occupancy']}%
-    - Total Transactions: {stats['total_transactions']:,}
+    - Average Rental Yield: {stats['rental_yield']}%
+    - Average Occupancy Rate: {stats['occupancy_rate']}%
+    - Total Transactions: {stats['transactions']:,}
     - Top Performing City: {stats['top_city']}
 
 """
@@ -29,16 +29,16 @@ def generate_market_insights(stats, city=None, prop_type=None):
 
     context = prepare_market_context(stats, city, prop_type)
 
-    prompt = f"""You are a professional real estate market analyst in Kenya.
+    prompt = f"""You are a proffessional real estate market analyst in Kenya.
     Based on the market data below, provide 3 clear and specifu investment insights.
     Be concise, mention specific numbers, and focus on actionable observations.
 
     {context}
      
      Provide exactly 3 insights in this format:
-    1. [Insight about prices or growth]
+    1. [Insight about prices or gtowth]
     2. [Insight about rental yields or occupancy]
-    3. [Insight about investment opportunity]
+    3. [Inisght about investment opportunity]
     """
 
     try:

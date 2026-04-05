@@ -17,7 +17,7 @@ NEIGHBORHOODS = {
 }
 
 # Defining the function with the simulated data
-def  generate_market_data():
+def  generate_market_data ():
     np.random.seed(42)  
     # This makes our random data consistent every time the app runs
     # Without this, the data would change every time we run the app, which is not ideal for testing and development
@@ -71,11 +71,11 @@ def  generate_market_data():
                     price = base * growth
                     records.append({
                         "City" : city,
-                        "Property_Type" : prop_type,
+                        "Property Type" : prop_type,
                         "Quarter" : quarter,
                         "Avg_Price_KES" : round(price),
                         "Rental_Yield": round(np.random.uniform(5.5, 9.5), 2),
-                        "Occupancy_Rate": round(np.random.uniform(70, 95), 1),
+                        "Occupanncy_Rate": round(np.random.uniform(70, 95), 1),
                         "Transactions": np.random.randint(50, 500),
                         "Price_Per_Sqft": round(price / np.random.uniform(800, 2000))
                     })
@@ -88,17 +88,12 @@ def get_city_summary(df, city):
     city_data = df[(df["City"] == city) & (df["Quarter"] == latest_quarter)]
     return city_data
 
-def get_price_trends(df, city, property_type):
+#Getting the price trend over time for a city and propeerty type
+def get_price_trend(df, city, prop_type):
     filtered = df[
-        (df["City"] == city) & 
-        (df["Property_Type"] == property_type)
+        (df["City"] == city) & (df["Property_Type"] == prop_type)
     ]
-    
-    trend = filtered.groupby("Quarter")["Avg_Price_KES"].mean().reset_index()
-    trend["Avg_Price_KES"] = trend["Avg_Price_KES"].round()
-    
-    return trend
-    
+    return filtered[["Quarter", "Avg_Price_KES"]]
 
 # Getting the market overview for a city
 def get_market_overview(df):
@@ -115,10 +110,10 @@ def get_top_performing_city(df):
 def get_summary_stats(df):
     latest = get_market_overview(df)
     summary = {
-        "avg_price": round(latest["Avg_Price_KES"].mean()),
-        "avg_rental_yield": round(latest["Rental_Yield"].mean(), 2),
-        "avg_occupancy": round(latest["Occupancy_Rate"].mean(), 1),
-        "total_transactions": round(latest["Transactions"].sum()),
-        "top_city": get_top_performing_city(df)
+        "Avg_Price_KES": round(latest["Avg_Price_KES"].mean()),
+        "Avg_Rental_Yield": round(latest["Rental_Yield"].mean(), 2),
+        "Occupancy_Rate": round(latest["Occupancy_Rate"].mean(), 1),
+        "Transactions": round(latest["Transactions"].sum()),
+        "top_city": get_top_performing_city
     }
-    return summary 
+    return summary
