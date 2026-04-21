@@ -23,7 +23,6 @@
 5. Ask any market question in plain English and get a data-backed answer.
 
 6. Explore the raw data behind every chart with dynamic filters
-## How It Works
 
  ## Tech Stack
  Python - Core Programming Language
