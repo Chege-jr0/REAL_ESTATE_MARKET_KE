@@ -72,6 +72,6 @@ def ask_market_question(question, stats, city=None, prop_type=None):
             model = "tinyllama",
             messages = [{"role": "user", "content": prompt}]
         )
-        return response["messages"]["content"]
+        return response["message"]["content"]
     except Exception as e:
         print("AI insights unavailable. Make sure Ollama is working")

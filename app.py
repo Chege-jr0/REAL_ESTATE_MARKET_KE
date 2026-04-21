@@ -247,7 +247,7 @@ st.subheader("Ask the AI Anything about the Market")
 
 question = st.text_input(
     "Type your Question Here:",
-    placeholder="Which City has the best rental yield? Is Mombasa a good investment?"
+    placeholder="Which City has the best rental yield? Is Mombasa  a good investment?"
 )
 
 if st.button("Ask AI"):
@@ -283,6 +283,6 @@ if st.checkbox("Show Raw Data"):
 
 st.markdown("---")
 st.caption("Kenya Real Estate Dashboard | Built with Streamlit, Plotly and Ollama(model = tinyllama)")
-st.caption("Made by PAUL GIKONYO (Data Analyst@Everything Data Africa)")
+st.caption("Made by PAUL GIKONYO (Data Analyst)")
 st.plotly_chart(fig_heatmap, use_container_width=True)
 

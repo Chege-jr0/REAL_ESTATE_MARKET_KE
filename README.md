@@ -67,17 +67,6 @@
 
 5. AI generates insights via TinyLlama running locally
 
-## Project Structure
-
-kenya-realestate-project/
-
-├── data.py          # Market data generation & helper functions
-|
-├── ai_insights.py   # Ollama AI insights & Q&A engine
-|
-├── app.py           # Streamlit dashboard
-|
-└── requirements.txt
 
 ## Author
 
