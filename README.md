@@ -34,6 +34,58 @@
  Plotly - Interactive data visualisations
  Pandas and Numpy - Data Processing and Generation
 
+
+## How it Works
+<img width="694" height="611" alt="Screenshot 2026-04-04 214856" src="https://github.com/user-attachments/assets/f756dd22-3453-4cb1-bd7f-a5f6b00656ee" />
+
+1. data.py generates 144 rows of Kenya market data.
+
+2. app.py loads data inot memory with @st.cache_data
+
+3. User selects city and property type from sidebar
+
+4. Charts, metrics and AI all update automatically.
+
+5. AI generates insights via TinyLlama running locally
+
+## The Three Charts
+Every Chart waas chose to answer a specific investment question:
+1. Price Trend Line: Shows Market trajectory and momentum
+
+2. City Comparison: Enables direct city-by-cuty comparison
+
+3. Rental Yield HeatMap - Identifies optimal city and propert type combinations.
+
+## How the AI works
+The dashboard builds a clean context dictionary from the current filtered state and passes it to TinyLlama
+
+```python
+context = {
+     "avg_price": 15_234_500,
+    "avg_rental_yield": 7.52,
+    "avg_occupancy": 82.3,
+    "total_transactions": 1842,
+    "top_city": "Nairobi",
+    "selected_city": "Mombasa",
+    "selected_property": "Residential"
+}
+```
+
+Important: All values are explicitly converted to plain Python Types float(), int(), str() before beingg passed to the AI. This prevents pandas dtype conflict that cause silent errors.
+
+## What the AI Does
+# Auto-generates investment insights:
+"Commercial properties in Nairobi show the strongest price apprecation at 22% over the 3 year period, while Kisumu residential properties offer the highest rental yields at 8.9%, presenting an attractive income-focused investment opportunity"
+
+## Project Structure
+```markdown
+kenya-realestate-dashboard/
+├── data.py          # Market data generation & helper functions
+├── ai_insights.py   # Ollama AI insights & Q&A engine
+├── app.py           # Streamlit dashboard (charts + AI + filters)
+└── requirements.txt
+```
+
  ## Prerequisites and Installation
  1. Install Python
  Download from python.org (Python 3.10 + recommended)
@@ -56,19 +108,32 @@
  7. Run the app
     streamlit run app.py
 
-## How it Works
-<img width="694" height="611" alt="Screenshot 2026-04-04 214856" src="https://github.com/user-attachments/assets/f756dd22-3453-4cb1-bd7f-a5f6b00656ee" />
+## Key Technical Concepts
+@st.cache_data on data loading.
 
-1. data.py generates 144 rows of Kenya market data.
+Without caching, generate_market_data() in data.py reruns every time a user changes a filter. Caching stores DataFrame in memory so filter changes are instant, no regeneration delay.
 
-2. app.py loads data inot memory with @st.cache_data
+Direct prompting instead of RAG
 
-3. User selects city and property type from sidebar
+Unlike a RAG app which uses vector search for large unstrucutured datasets, this dashboard passes a structured market summary directly into the AI prompt.The data is small and structured enough to fit in one prompt, no vector store needed. Simpler and faster.
 
-4. Charts, metrics and AI all update automatically.
+temperature = 0 on the AI model
 
-5. AI generates insights via TinyLlama running locally
+For financial and investment data we want strictly factual responses. temperature = 0 eliminates creativity and forces the AI to stick to what the data shows.
 
+Price trend grouping
+
+The price trend line chart groups data by quarter using.groupby("Quarter").mean() before plotting. Without this, mutiple rows per quarter create overlapping lines instead of one clean trend line.
+
+## Related Articles
+1. PART 1: How I built a RAG App That Talks to My CSV Files
+  ```markdown
+https://medium.com/@paulgikonyo100/retrieval-augmented-generation-assistant-that-enables-users-to-communicate-with-data-in-plain-41bf9e9d01e7
+  ```
+2. PART 2: From RAG App to Real Estate Dashboard
+```markdown
+https://medium.com/@paulgikonyo100/from-rag-app-to-real-estate-dashboard-how-i-built-ai-powered-real-estate-market-intelligence-3abd54ec2b07
+```
 
 ## Author
 
