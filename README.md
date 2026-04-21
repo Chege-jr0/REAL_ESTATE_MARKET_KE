@@ -57,6 +57,8 @@
     streamlit run app.py
 
 ## How it Works
+<img width="694" height="611" alt="Screenshot 2026-04-04 214856" src="https://github.com/user-attachments/assets/f756dd22-3453-4cb1-bd7f-a5f6b00656ee" />
+
 1. data.py generates 144 rows of Kenya market data.
 
 2. app.py loads data inot memory with @st.cache_data
