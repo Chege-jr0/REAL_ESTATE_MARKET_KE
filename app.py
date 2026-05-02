@@ -6,7 +6,7 @@ import pandas as pd
 from data import (
     generate_market_data,
     get_city_summary,
-    get_price_trend,
+    get_price_trends,
     get_market_overview,
     get_summary_stats,
     CITIES,
@@ -60,18 +60,20 @@ col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     st.metric(
-    )
+    label="Avg Price KES",
+    value=f"{stats['avg_price']:,.2f}M"
+)
 
 with col2:
     st.metric(
         label = "Avg Rental Yield",
-        value = f"{stats['rental_yield']}%"
+        value = f"{stats['avg_rental_yield']}%"
     )
 
 with col3:
     st.metric(
         label = "Avg Occupancy Rate",
-        value = f"{stats['occupancy_rate']}%"
+        value = f"{stats['avg_occupancy']}%"
     )
 
 with col4:
@@ -91,15 +93,15 @@ st.markdown("---")
 
 #Chart 1 - Price Trends Line Chart
 st.subheader("Property Price Trends Over Time")
-
-# Apply filters BEFORE creating columns
-city_for_trend = selected_city if selected_city != "All Cities" else "Nairobi"
-prop_for_trend = selected_property if selected_property != "All Types" else "Residential"
-trend_data = get_price_trend(df, city_for_trend, prop_for_trend)
-
 col1, col2 = st.columns(2)
 
 with col1:
+        # Apply filters BEFORE creating columns
+    city_for_trend = selected_city if selected_city != "All Cities" else "Nairobi"
+    prop_for_trend = selected_property if selected_property != "All Types" else "Residential"
+
+    trend_data = get_price_trends(df, city_for_trend, prop_for_trend)
+    
     fig_line = px.line(
         trend_data,
         x="Quarter",
@@ -114,63 +116,39 @@ with col1:
     )
     fig_line.update_layout(
         plot_bgcolor="white",
-        yaxis_tickformat=",",
-        value = stats['top_city']
+        yaxis_tickformat="," 
     )
-st.markdown("---")    
+    st.plotly_chart(fig_line, use_container_width=True, key="price_trend_chart")
+st.markdown("---")
 
-#Chart 1 - Price Trends Line Chart
-st.subheader("Property Trends Over Time")
-col1, col2 = st.columns(2)
+    
 
-with col1: 
-    city_for_trend = selected_city if selected_city != "All Cities" else "Nairobi"
-    prop_for_trend = selected_property if selected_property != "All Types" else "Residential"
-
-    trend_data = get_price_trend(df, city_for_trend, prop_for_trend)
-
-    fig_line = px.line(
-        trend_data,
-        x="Quarter",
-        y="Ävg_Price_KES",
-        title= f"{city_for_trend} - {prop_for_trend} Price Trend",
-        labels={"Avg_Price_KES": "Average Price (KES)", "Quarter": "Quarter"},
-        markers=True, #Adds a dot to each data point
-        color_discrete_sequence=["#2E86AB"]
-    )
-
-    fig_line.update_layout(
-        plot_bgcolor="white", #white background
-        yaxis_tickformat = "," #Formats the Y-axis with commas
-
-    )
-    st.plotly_chart(fig_line, use_container_width=True)
 
 
     # Chart 2 - City Comparison Bar Chart
-    with col2:
-        overview_data = get_market_overview(df)
+with col2:
+    overview_data = get_market_overview(df)
 
-        if selected_property != "All Types": #If selected, make the chart respond to filters dynamically
-            overview_data = overview_data[overview_data["Property_Type"] == selected_property]
+    if selected_property != "All Types": #If selected, make the chart respond to filters dynamically
+        overview_data = overview_data[overview_data["Property_Type"] == selected_property]
 
-        fig_bar = px.bar(
-            overview_data, 
-            x="City",
-            y="Avg_Price_KES",
-            color = "Property_Type",
-            title =  "Current Prices by City and Property Type",
-            labels={"Avg_Price_KES": "Average Price (KES)", "City": "City"},
-            barmode="group",
-            color_discrete_sequence=["#2E86AB", "#A23B72", "#F18F01"] 
-        )  
+    fig_bar = px.bar(
+        overview_data, 
+        x="City",
+        y="Avg_Price_KES",
+        color = "Property_Type",
+        title =  "Current Prices by City and Property Type",
+        labels={"Avg_Price_KES": "Average Price (KES)", "City": "City"},
+        barmode="group",
+        color_discrete_sequence=["#2E86AB", "#A23B72", "#F18F01"] 
+    )  
 
-        fig_bar.update_layout(
-            plot_bgcolor = "white",
-            yaxis_tickformat = ","
-        )  
+    fig_bar.update_layout(
+        plot_bgcolor = "white",
+        yaxis_tickformat = ","
+    )  
 
-        st.plotly_chart(fig_bar, use_container_width=True)
+    st.plotly_chart(fig_bar, use_container_width=True, key ="city_comparison_chart")
 
 # Rental Yield HeatMap
 # The Pivot table turns your data to a gridformat city as columns, property as rows.
@@ -210,7 +188,7 @@ fig_heatmap.update_layout(
 )
 
 
-st.plotly_chart(fig_heatmap, use_container_width=True)
+st.plotly_chart(fig_heatmap, use_container_width=True, key = "city_heatmap")
 
 st.markdown("---")
 
@@ -282,7 +260,5 @@ if st.checkbox("Show Raw Data"):
     st.caption(f"Showing {len(display_df)} records")      
 
 st.markdown("---")
-st.caption("Kenya Real Estate Dashboard | Built with Streamlit, Plotly and Ollama(model = tinyllama)")
-st.caption("Made by PAUL GIKONYO (Data Analyst)")
-st.plotly_chart(fig_heatmap, use_container_width=True)
+
 
